@@ -1,4 +1,5 @@
-from flask import flash, request, redirect, render_template
+from flask import flash, request, redirect, render_template, url_for
+from app.routes.auth import auth
 from werkzeug.utils import secure_filename
 from app import app
 import os 
@@ -9,7 +10,6 @@ app.secret_key = "secret key"
 
 #move to confi ini
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
-
 UPLOAD_FOLDER = os.path.join(os.getcwd(), 'uploads')
 
 # Make directory if uploads is not exists
@@ -27,7 +27,12 @@ def allowed_file(filename):
         return True
 
 
+@app.route("/")
+def index():
+    return render_template('index.html')
+
 @app.route("/read_files")
+@auth.login_required
 def read_files():    
     '''
     Test endpoint using curl
@@ -39,6 +44,7 @@ def read_files():
 
 
 @app.route("/bulk_upload", methods=["POST"])
+@auth.login_required
 def bulk_upload():    
     '''
     Test endpoint using curl
@@ -58,14 +64,18 @@ def bulk_upload():
             print(f'{filename} - is being saved.')
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         else:
-            return {"message" : f"File format not support, supported formats - {ALLOWED_EXTENSIONS}"}, 422
+            # flash('Wrong file format.')
+            # return redirect(url_for("index"), code=422)
+            return {"message": f"Issue with file format, Allowed format - {ALLOWED_EXTENSIONS}"}
 
     if unploaded_files:
-        return {"message": f"Few File exists with same name, please reupload files : {unploaded_files}"}, 422
-    
+        # flash(f'File with same name already exists - {unploaded_files}')
+        # return redirect(url_for("index"), code=422)
+        return {"message": f"File name with same already exoists -{unploaded_files}"}
     return {"message" : "Upload succesfull."}
 
 @app.route("/bulk_delete", methods=['POST'])
+@auth.login_required
 def delete_files():
     '''
     Get list of image to delete, using json
