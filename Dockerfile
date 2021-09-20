@@ -2,10 +2,14 @@ FROM alpine
 
 FROM python
 
-RUN mkdir /app
+RUN mkdir /image-repo
 
-ADD echo_container.py /app
+ADD app.py requirement.txt /image-repo
 
-RUN  pip install flask
+ADD app /image-repo/app
 
-ENTRYPOINT python /app/echo_container.py
+WORKDIR /image-repo
+
+RUN  pip install -r requirement.txt
+
+ENTRYPOINT python app.py
