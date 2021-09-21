@@ -1,0 +1,9 @@
+apiVersion: v1
+name: image-repository
+version: 1.0.0
+description: Helm chart for image-repository
+maintainers:
+- name: Rushi
+  email: rushikeshbutley@gmail.com
+sources:
+- https://github.com/rushi47/echo-container.git

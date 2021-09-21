@@ -1,0 +1,28 @@
+image-repository:
+  image:
+    name: rushib47/shopify-task
+    imageTag: v1
+    pullPolicy: IfNotPresent
+
+  resources:
+    requests:
+      memory: 100Mi
+      cpu: 0.2
+    limits:
+      memory: 200Gi
+      cpu: 0.4
+
+  autoscaling:
+    minReplicas: 2
+    maxReplicas: 2
+
+  service:
+    type: ClusterIP
+    service_port: 4747
+
+  ingress:
+    ingressClassName: "ingress-nginx"
+    domain: "shopify-test.com"
+
+  podDisruptionBudget:
+    enabled: true

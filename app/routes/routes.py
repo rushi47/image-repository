@@ -27,6 +27,13 @@ def allowed_file(filename):
         return True
 
 
+@app.route("/health")
+def health():
+    '''
+    TODO: implement health checks here
+    '''
+    return 'Life is Good!'
+
 @app.route("/")
 def index():
     return render_template('index.html')
