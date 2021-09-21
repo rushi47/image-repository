@@ -47,8 +47,6 @@ curl -v --user "shopify:shopify@123" -X POST -F files=@'file_name1.jpg' -F files
 ['png', 'jpg', 'jpeg', 'gif']
 ```
 
-- App is deployed on Kubernetes, _**the volume is shared between all the pods**_. Avoiding problem dedup and consistency.
-
 - App also support bulk delete feature and can be tested from:
 ```
 curl -v --user "shopify:shopify@123" -H "Content-Type: application/json" -X POST -d '{"name": "working", "file_names":["test3.jpg", "test2.jpg"]}' localhost:55028/bulk_delete
