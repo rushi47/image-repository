@@ -13,8 +13,8 @@ image-repository:
       cpu: 0.4
 
   autoscaling:
-    minReplicas: 2
-    maxReplicas: 2
+    minReplicas: 1
+    maxReplicas: 1
 
   service:
     type: ClusterIP
