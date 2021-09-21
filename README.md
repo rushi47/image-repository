@@ -3,10 +3,17 @@
 **How to test this repo -**
 
 - Repo expects Kubernetes(minikube) & Helm installed on the System.
-- Clone repo from : `https://github.com/rushi47/image-repository`
-- And install the app using Helm -
-`helm install -n shopify -f image-kube-charts/test-values.yaml shopify image-kube-charts --create-namespace`
- ( Docker image for respective code, is already pushed on docker hub. So no need to build it 😄.)
+- Clone repo from : 
+```
+https://github.com/rushi47/image-repository
+```
+- Once cloned, install the app using Helm -
+```
+helm install -n shopify -f image-kube-charts/test-values.yaml shopify image-kube-charts --create-namespace
+```
+ _image-kube-chars_ : Dir contains chart to install app on Kubernetes.
+
+( Docker image for respective code, is already pushed on docker hub. So no need to build it 😄.)
   And this should create :
   - Deployment
   - ReplicaSet
@@ -16,8 +23,10 @@
   - PDB 
 
 - **[A]** [optional] If nginx-ingress controller is installed - app is exposed on : _**shopify-test.com**_
-- **[B]** Else create tunnel to service object : for minikube - _**minikube service --url shopify -n shopify**_
-
+- **[B]** Else create tunnel to service object : for minikube - 
+```
+minikube service --url shopify -n shopify
+```
 
 Using above steps, app should be exposed smoothly on the URL from step **A** or **B** 😃.
 [In case kube is not installed, we can run from docker directly, I will mention the steps for the same at end of this README]
@@ -27,26 +36,36 @@ Using above steps, app should be exposed smoothly on the URL from step **A** or 
 - App is configured with basic auth for now (I got to know about the challenge late :( ) 
 
 - To test bulk upload feature :
-`curl -v --user "shopify:shopify@123" -X POST -F files=@'file_name1.jpg' -F files=@'file_name2.jpg' localhost:55028/bulk_upload`
+```
+curl -v --user "shopify:shopify@123" -X POST -F files=@'file_name1.jpg' -F files=@'file_name2.jpg' localhost:55028/bulk_upload
+```
 
 - Above endpoint lets you upload, multiple files
 
 - As its our image repo, Only file allowed are with Extension :
-`['png', 'jpg', 'jpeg', 'gif']`
+```
+['png', 'jpg', 'jpeg', 'gif']
+```
 
 - App is deployed on Kubernetes, _**the volume is shared between all the pods**_. Avoiding problem dedup and consistency.
 
 - App also support bulk delete feature and can be tested from:
-`curl -v --user "shopify:shopify@123" -H "Content-Type: application/json" -X POST -d '{"name": "working", "file_names":["test3.jpg", "test2.jpg"]}' localhost:55028/bulk_delete`
+```
+curl -v --user "shopify:shopify@123" -H "Content-Type: application/json" -X POST -d '{"name": "working", "file_names":["test3.jpg", "test2.jpg"]}' localhost:55028/bulk_delete
+```
 
 - Dont worry, I got you covered, you can retrieve the list of files uploaded 😉 :
-`curl -v --user "shopify:shopify@123" localhost:55028/read_files`
+```
+curl -v --user "shopify:shopify@123" localhost:55028/read_files
+```
 
 
 ---
 **Testing Repo without Kubernetes:**
-     - As image is available on docker hub it should be as simple as :
-    `docker run -d -p 4747:4747 rushib47/shopify-task:v1`
+- As image is available on docker hub it should be as simple as :
+```
+docker run -d -p 4747:4747 rushib47/shopify-task:v1
+```
 
 
 Existing architecture of app, already have components decoupled and is Kubernetes ready. For instance to modify auth, only thing which we need to modify is auth file.
